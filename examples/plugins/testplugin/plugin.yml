@@ -1,0 +1,5 @@
+plugin:
+    id: com.noccy.testplugin
+    name: Test Plugin
+    version: 1.0
+    class: TestPlugin\Plugin
