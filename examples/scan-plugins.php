@@ -19,6 +19,6 @@ $manager->setRootNamespace('Pluggable\Plugin');
 $manager->scan();
 
 // Activate the testplugin
-$manager->activatePlugins(
-    array('com.noccy.testplugin')
-);
+$manager->activatePlugins(array(
+    'com.noccy.testplugin'
+));
