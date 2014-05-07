@@ -34,6 +34,9 @@ The configuration file is in yaml format:
             class:   MyApp\Plugin\TestPlugin\TestPlugin
             # And the plugin source file (or autoloader bootstrap)
             file:    plugin.php
+            # Services (only if symfony service container is available)
+            services:
+                
 
 The host id is enforced if `setHostId()` is called on the plugin manager. In
 this case, plugins not having the host field set to a compatible value will not

@@ -1,0 +1,7 @@
+plugin:
+    id:         pluggable.example01
+    name:       Example Plugin
+    version:    1.0
+    tag:        [ examplehost.plugin ]
+    class:      Pluggable\Example1\ExamplePlugin
+    autoload:   Pluggable\Example1
