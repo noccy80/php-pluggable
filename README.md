@@ -88,14 +88,14 @@ And the plugin is just php:
 
         // Create a persister, to track loaded plugins between sessions
         $persister = new Pluggable\Persister(__DIR__."/../plugins/state.conf");
-        $manager->setPersister(persister);
+        $manager->setPersister($persister);
 
         // Scan for plugins, and also load the ones that were previously
         // loaded according to the used persister.
         $manager->scan();
 
         // Load all plugins
-        $manager->load("*");        
+        $manager->activatePlugins("*");        
         
 ## Globals
 
@@ -111,3 +111,13 @@ And in the plugin:
             $this->globals->output->write("Hello World!\n");
         }
 
+## Using service containers
+
+To use a service container, replace the default loader with a container aware
+loader, and pass the container as the first parameter to the constructor (or
+call on the loaders `setContainer` method)
+
+        $manager = new Pluggable\Manager();
+        $loader = new Pluggable\Loader\ContainerAwareLoader($container);
+        $manager->setLoader($loader);
+        
