@@ -7,7 +7,7 @@ use Pluggable\Manager\Loader\PluginLoader;
 use Pluggable\Manager\Scanner\PluginScannerInterface;
 use Pluggable\Manager\Scanner\PluginScanner;
 use Pluggable\Plugin\PluginInterface;
-
+use Pluggable\Persister\PersisterInterface;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -33,6 +33,8 @@ class Manager
      * @var array<String> Plugin 
      */
     protected $plugin_paths;
+    
+    protected $persister;
 
     public function __construct()
     {
@@ -72,6 +74,12 @@ class Manager
         }
         
         $this->scanPlugins($plugins);
+        if ($this->persister) {
+            $active = $this->persister->getActivePlugins();
+            foreach($active as $plugin) {
+                $this->activatePlugin($plugin);
+            }
+        }
     }
     
     protected function scanPlugins(array $plugins)
@@ -136,6 +144,16 @@ class Manager
         if (array_key_exists($plugin_id, $this->plugins)) {
             $this->plugins[$plugin_id]->deactivate();
         }
+    }
+
+    public function setPersister(PersisterInterface $persister=null)
+    {
+        $this->persister = $persister;
+    }
+    
+    public function getPersister()
+    {
+        return $this->persister;
     }
 
 }
