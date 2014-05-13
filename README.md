@@ -16,8 +16,10 @@ Pluggable provides plugin-support with a lot of nifty features such as:
 
 A plugin consists of at least two files:
 
- * a `plugin.conf` file containing metadata and plugin information
- * a `plugin.php` file containing the plugin class
+ * a `plugin.yml` file containing metadata and plugin information
+ * a php-file containing the plugin class
+ 
+This can be modified by creating your own custom Scanner.
 
 The configuration file is in yaml format:
 
@@ -30,6 +32,8 @@ The configuration file is in yaml format:
             name:    Testplugin
             # The version of the plugin
             version: 1.0
+            # Author
+            author:  Noccy
             # This is the main plugin class
             class:   MyApp\Plugin\TestPlugin\TestPlugin
             # And the plugin source file (or autoloader bootstrap)
@@ -73,7 +77,12 @@ And the plugin is just php:
 
 ## Loading plugins
 
-
+You can load plugins manually using `Manager#activatePlugin()` or
+`PluginInstance#activate()`. Additionally, when using a persister, you can
+save and restore the plugin state as appropriate. The persister just need to
+implement `getActivePlugins()` to return an array of active plugins, and the
+`setActivePlugins(array)` to set the active plugins. Upon being called, the
+persister should write or read the data from wherever appropriate.
 
         use NoccyLabs\Pluggable;
         
@@ -87,7 +96,7 @@ And the plugin is just php:
         ]);
 
         // Create a persister, to track loaded plugins between sessions
-        $persister = new Pluggable\Persister(__DIR__."/../plugins/state.conf");
+        $persister = new MyPersister(__DIR__."/../plugins/state.conf");
         $manager->setPersister($persister);
 
         // Scan for plugins, and also load the ones that were previously
@@ -98,6 +107,8 @@ And the plugin is just php:
         $manager->activatePlugins("*");        
         
 ## Globals
+
+*Note: Still no globals!*
 
 Passing globals is done via the `globals` property:
 

@@ -18,6 +18,8 @@ class PluginInstance
     
     protected $manager;
     
+    protected $description;
+    
     public function getId()
     {
         if (empty($this->plugin_instance)) {
@@ -57,6 +59,17 @@ class PluginInstance
     public function getVersion()
     {
         return $this->version;
+    }
+    
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+    
+    public function getDescription()
+    {
+        return $this->description;
     }
     
     public function setPluginInstance(PluginInterface $plugin)

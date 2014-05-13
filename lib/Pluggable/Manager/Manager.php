@@ -140,7 +140,9 @@ class Manager
             ->setVersion($plugin_conf['version'])
             ->setPluginInstance($plugin_inst)
             ->setManager($this);
-        
+        if (!empty($plugin_conf['description'])) {
+            $plugin->setDescription($plugin_conf['description']);
+        }
         return $plugin;
     
     }
