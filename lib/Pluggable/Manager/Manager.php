@@ -59,7 +59,7 @@ class Manager
     
     public function addPath($path, $prepend=false)
     {
-        if (!is_dir($path)) { return false; }
+        if (!is_dir($path)) { return $this; }
         $path = realpath($path);
         if ($prepend) {
             array_unshift($path, $this->plugin_paths);
