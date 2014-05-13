@@ -35,12 +35,15 @@ class Manager
     protected $plugin_paths;
     
     protected $persister;
+    
+    protected $active;
 
     public function __construct()
     {
         $this->loader = new PluginLoader();
         $this->scanner = new PluginScanner();
         $this->plugin_paths = array();
+        $this->active = array();
     }
 
     public function setLoader(PluginLoaderInterface $loader)
@@ -80,6 +83,20 @@ class Manager
                 $this->activatePlugin($plugin);
             }
         }
+    }
+    
+    public function save()
+    {
+        if (!$this->persister) {
+            throw new \BadMethodCallException("Assign a persister before calling Manager#save");
+        }
+        $active = array();
+        foreach($this->plugins as $plugin) {
+            if ($plugin->isActive()) {
+                $active[] = $plugin->getId();
+            }
+        }
+        $this->persister->setActivePlugins($active);
     }
     
     protected function scanPlugins(array $plugins)
