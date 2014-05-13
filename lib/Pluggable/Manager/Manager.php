@@ -98,7 +98,7 @@ class Manager
 
         $plugin_conf = $config['plugin'];
 
-        foreach(array('id','name','version','class','autoload') as $key) {
+        foreach(array('id','name','version','author','class','autoload') as $key) {
             if (!array_key_exists($key,$plugin_conf)) { 
                 return false;
             }
@@ -119,6 +119,7 @@ class Manager
         $plugin = new PluginInstance();
         $plugin
             ->setName($plugin_conf['name'])
+            ->setAuthor($plugin_conf['author'])
             ->setVersion($plugin_conf['version'])
             ->setPluginInstance($plugin_inst)
             ->setManager($this);

@@ -1,6 +1,7 @@
 plugin:
     id:         pluggable.example02
     name:       Example Plugin
+    author:     noccy
     version:    1.0
     tag:        [ examplehost.plugin ]
     class:      Pluggable\Example2\ExamplePlugin

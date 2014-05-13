@@ -10,6 +10,8 @@ class PluginInstance
     
     protected $version;
     
+    protected $author;
+    
     protected $plugin_instance;
 
     protected $active = false;
@@ -33,6 +35,17 @@ class PluginInstance
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+        return $this;
+    }
+    
+    public function getAuthor()
+    {
+        return $this->author;
     }
     
     public function setVersion($version)
