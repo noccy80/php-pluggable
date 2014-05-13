@@ -2,6 +2,12 @@ plugin:
     id:         pluggable.example01
     name:       Example Plugin
     author:     noccy
+    description: |
+        This is a plugin
+        with a long description
+        text over several lines.
+        
+        Double breaks for new paragraph.
     version:    1.0
     tag:        [ examplehost.plugin ]
     class:      Pluggable\Example1\ExamplePlugin

@@ -20,6 +20,7 @@ $manager
 $plugins = $manager->getAvailablePlugins();
 foreach($plugins as $plugin) {
     echo "Loading {$plugin->getName()} ({$plugin->getId()})\n";
+    echo "Description: ".$plugin->getDescription()."\n";
     $plugin->activate();
 }
 

@@ -141,7 +141,15 @@ class Manager
             ->setPluginInstance($plugin_inst)
             ->setManager($this);
         if (!empty($plugin_conf['description'])) {
-            $plugin->setDescription($plugin_conf['description']);
+            $descr = $plugin_conf['description'];
+            $descr_para = explode("\n\n",$descr);
+            $descr_clean = array();
+            foreach($descr_para as $para) {
+                $lines = array_map("trim",explode("\n",$para));
+                $descr_clean[] = join(" ",$lines);
+                
+            }
+            $plugin->setDescription(join("\n",$descr_clean));
         }
         return $plugin;
     
