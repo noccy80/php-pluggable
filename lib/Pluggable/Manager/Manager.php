@@ -149,6 +149,7 @@ class Manager
     public function setPersister(PersisterInterface $persister=null)
     {
         $this->persister = $persister;
+        return($this);
     }
     
     public function getPersister()
