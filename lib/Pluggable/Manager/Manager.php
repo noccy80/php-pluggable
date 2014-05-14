@@ -155,6 +155,14 @@ class Manager
     
     }
     
+    public function getPlugin($plugin_id)
+    {
+        if (array_key_exists($plugin_id, $this->plugins)) {
+            return $this->plugins[$plugin_id];
+        }
+        return null;
+    }
+    
     public function getAvailablePlugins()
     {
         return $this->plugins;
