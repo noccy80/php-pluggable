@@ -20,6 +20,8 @@ class PluginInstance
     
     protected $description;
     
+    protected $plugin_path;
+    
     public function getId()
     {
         if (empty($this->plugin_instance)) {
@@ -48,6 +50,17 @@ class PluginInstance
     public function getAuthor()
     {
         return $this->author;
+    }
+    
+    public function setPluginPath($path)
+    {
+        $this->plugin_path = $path;
+        return $this;
+    }
+    
+    public function getPluginPath()
+    {
+        return $this->plugin_path;
     }
     
     public function setVersion($version)

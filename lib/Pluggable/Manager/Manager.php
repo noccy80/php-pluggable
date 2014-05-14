@@ -139,6 +139,7 @@ class Manager
             ->setAuthor($plugin_conf['author'])
             ->setVersion($plugin_conf['version'])
             ->setPluginInstance($plugin_inst)
+            ->setPluginPath($root)
             ->setManager($this);
         if (!empty($plugin_conf['description'])) {
             $descr = $plugin_conf['description'];
