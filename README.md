@@ -3,15 +3,19 @@ noccylabs/pluggable
 
 Pluggable provides plugin-support with a lot of nifty features such as:
 
- * Multiple plugin paths - allows you to include default plugins in your phar
-   executable while still making it possible for the user to add custom plugins.
-   *NOTE: Plugin enumeration currently fails in phar executables*
- * Plugins in directories or phar archives - develop plugins live in the filesystem,
-   and distribute the sourcecode *or* a compressed ready-to-use plugin archive.
+ * Multiple plugin paths - allows you to include default plugins with your
+   project while allowing plugins to be read from one or more additional locations.
  * Symfony2 ready - Pluggable makes use of the Symfony2 event dispatcher to
    notify and interact with the plugins. A service container can be passed to
    the plugins if they implement the `ContainerAwareInterface` interface. The
    configuration parser is using Symfony2 yaml.
+
+## Roadmap
+
+ * The `Scanner` and `Loader` namespaces will mvoe to the root `Pluggable` 
+   namespace.
+ * Tests need implementing.
+ 
 
 ## Terminology
 
