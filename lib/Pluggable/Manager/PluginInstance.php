@@ -22,6 +22,8 @@ class PluginInstance
     
     protected $plugin_path;
     
+    protected $dependencies;
+    
     public function getId()
     {
         if (empty($this->plugin_instance)) {
@@ -85,6 +87,17 @@ class PluginInstance
         return $this->description;
     }
     
+    public function setDependencies(array $dependencies=null)
+    {
+        $this->dependencies = (array)$dependencies;
+        return $this;
+    }
+    
+    public function getDependencies()
+    {
+        return $this->dependencies;
+    }
+    
     public function setPluginInstance(PluginInterface $plugin)
     {
         $this->plugin_instance = $plugin;
@@ -110,6 +123,13 @@ class PluginInstance
     public function activate()
     {
         if ($this->active) { return; }
+        foreach($this->dependencies as $dependency) {
+            $plugin = $this->manager->getPlugin($dependency);
+            if (!$plugin) { 
+                throw new \Exception("Unable to activate plugin {$this->getId()} as the dependency {$dependency} is missing!");
+            }
+            $plugin->activate(); 
+        }
         $this->manager->getLoader()->loadPlugin($this->plugin_instance);
         $this->active = true;
     }

@@ -1,5 +1,5 @@
 plugin:
-    id:         pluggable.example02
+    id:         pluggable.example02.exampleplugin
     name:       Example Plugin
     author:     noccy
     version:    1.0

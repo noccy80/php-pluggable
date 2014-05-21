@@ -131,14 +131,24 @@ class Manager
                 }
             }
         });
+        if (!class_exists($plugin_class)) {
+            $plugin_name = $plugin_conf['name'];
+            error_log("Error: Unable to find the class {$plugin_class} needed for {$plugin_name}");
+            return false;
+        }
         $plugin_inst = new $plugin_class();
-        
+        if (!empty($plugin_conf['depends'])) {
+            $dependencies = $plugin_conf['depends'];
+        } else {
+            $dependencies = null;
+        }
         $plugin = new PluginInstance();
         $plugin
             ->setName($plugin_conf['name'])
             ->setAuthor($plugin_conf['author'])
             ->setVersion($plugin_conf['version'])
             ->setPluginInstance($plugin_inst)
+            ->setDependencies($dependencies)
             ->setPluginPath($root)
             ->setManager($this);
         if (!empty($plugin_conf['description'])) {
