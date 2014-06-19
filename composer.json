@@ -15,6 +15,11 @@
         "symfony/dependency-injection": "2.4.*"
     },
     "autoload": {
-        "psr-0": { "NoccyLabs\\Pluggable\\": "src/", "Pluggable\\":"lib/" }
+        "psr-0": { "Pluggable\\":"lib/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
     }
 }
