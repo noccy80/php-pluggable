@@ -134,6 +134,7 @@ class Manager
 
         foreach(array('id','name','version','author','class','autoload') as $key) {
             if (!array_key_exists($key,$plugin_conf)) { 
+                error_log("Warning: {$root}: Plugin config is missing a required key: {$key}");
                 return false;
             }
         }
