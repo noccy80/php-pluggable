@@ -3,7 +3,7 @@
 require_once __DIR__."/../../vendor/autoload.php";
 
 use Pluggable\Manager\Manager;
-use Pluggable\Manager\Loader\ContainerAwareLoader;
+use Pluggable\Loader\ContainerAwareLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -17,9 +17,12 @@ $manager
     ->scan()
     ;
 
-// This should load the dependencies of example4 (example2)
-$plugin = $manager->getPlugin("pluggable.example4.exampleplugin");
-$plugin->activate();
+$plugins = $manager->getAvailablePlugins();
+foreach($plugins as $plugin) {
+    echo "Loading {$plugin->getName()} ({$plugin->getId()})\n";
+    echo "Description: ".$plugin->getDescription()."\n";
+    $plugin->activate();
+}
 
 // you could also do $manager->activatePlugin("plugin.id.here")
 

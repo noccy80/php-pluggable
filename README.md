@@ -12,13 +12,13 @@ Pluggable provides plugin-support with a lot of nifty features such as:
 
 ## Roadmap
 
- * The `Scanner` and `Loader` namespaces will mvoe to the root `Pluggable` 
-   namespace.
  * Tests need implementing.
  
 
 ## Terminology
 
+ * **Manager** - The manager is in the center of the plugin framework. The manager
+   locates, enumerates and load plugins.
  * **Persister** - A class implementing the `PersisterInterface` interface to read
    and write the list of loaded plugins between sessions.
  * **Scanner** - A class implementing the `ScannerInterface` interface to find
@@ -78,10 +78,10 @@ persister should write or read the data from wherever appropriate, so if you
 like to keep your code compact your main application class could be your
 persister.
 
-        use NoccyLabs\Pluggable;
+        use Pluggable\Manager\Manager;;
         
         // Create a new plugin manager
-        $manager = new Pluggable\Manager();
+        $manager = new Manager();
         // Create a persister, to track loaded plugins between sessions
         $persister = new MyPersister(__DIR__."/../plugins/state.conf");
         
@@ -99,7 +99,7 @@ persister.
 
 Passing globals is done via the `globals` property:
 
-        $manager = new Pluggable\Manager();
+        $manager = new Pluggable\Manager\Manager();
         $manager->globals->output = $output;
 
 And in the plugin:
@@ -115,7 +115,7 @@ To use a service container, replace the default loader with a container aware
 loader, and pass the container as the first parameter to the constructor (or
 call on the loaders `setContainer` method)
 
-        $manager = new Pluggable\Manager();
+        $manager = new Pluggable\Manager\Manager();
         $loader = new Pluggable\Loader\ContainerAwareLoader($container);
         $manager->setLoader($loader);
         

@@ -17,24 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-namespace Pluggable\Plugin;
+namespace Pluggable\Loader;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Pluggable\Plugin\PluginInterface;
 
-abstract class ContainerAwarePlugin extends Plugin implements ContainerAwareInterface
+class PluginLoader implements LoaderInterface
 {
-    protected $container;
-    
-    public function setContainer(ContainerInterface $container = null)
+    public function loadPlugin(PluginInterface $plugin)
     {
-        $this->container = $container;
+        $plugin->activate();
+        return $plugin;
     }
-    
-    public function getContainer()
-    {
-        return $this->container;
-        
-    }
-    
 }
