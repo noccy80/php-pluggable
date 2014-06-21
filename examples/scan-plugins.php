@@ -1,11 +1,11 @@
 <?php
 
-require_once __DIR__."/../../vendor/autoload.php";
+require_once __DIR__."/../vendor/autoload.php";
 
 use Pluggable\Manager\Manager;
 
 $manager = new Manager();
-$manager->addPath(__DIR__."/..");
+$manager->addPath(__DIR__."/plugins");
 $manager->scan();
 
 $plugins = $manager->getAvailablePlugins();

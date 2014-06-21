@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__."/../../vendor/autoload.php";
+require_once __DIR__."/../vendor/autoload.php";
 
 use Pluggable\Manager\Manager;
 use Pluggable\Loader\ContainerAwareLoader;
@@ -12,7 +12,7 @@ $container->set("event_dispatcher", new EventDispatcher());
 
 $manager = new Manager();
 $manager
-    ->addPath(__DIR__."/..")
+    ->addPath(__DIR__."/plugins")
     ->setLoader(new ContainerAwareLoader($container))
     ->scan()
     ;
