@@ -24,6 +24,11 @@ use Symfony\Component\Yaml\Yaml;
 use Pluggable\Manager\PluginInstance;
 use Pluggable\Manager\Manager;
 
+/**
+ * Scans for plugins.
+ * 
+ * 
+ */
 class PluginScanner implements ScannerInterface
 {
     protected $manager;
@@ -91,28 +96,38 @@ class PluginScanner implements ScannerInterface
                 return false;
             }
         }
-        $autoload_ns = rtrim($plugin_conf['autoload'],"\\")."\\";
+        
+        // Define autoloader
         $plugin_class = $plugin_conf['class'];
-        spl_autoload_register(function($class) use($root,$autoload_ns) {
-            if (strncmp($autoload_ns,$class,strlen($autoload_ns)) === 0) {
-                $filename = $root."/".str_replace("\\","/",substr($class,strlen($autoload_ns))).".php";
-                if (file_exists($filename)) {
-                    require_once $filename;
-                    return true;
+        if (!class_exists($plugin_class)) {
+            $autoload_ns = rtrim($plugin_conf['autoload'],"\\")."\\";
+            spl_autoload_register(function($class) use($root,$autoload_ns) {
+                if (strncmp($autoload_ns,$class,strlen($autoload_ns)) === 0) {
+                    $filename = $root."/".str_replace("\\","/",substr($class,strlen($autoload_ns))).".php";
+                    if (file_exists($filename)) {
+                        require_once $filename;
+                        return true;
+                    }
                 }
-            }
-        });
+            });
+        }
+        
+        // Check if the plugin is loadable
         if (!class_exists($plugin_class)) {
             $plugin_name = $plugin_conf['name'];
             error_log("Error: Unable to find the class {$plugin_class} needed for {$plugin_name}");
             return false;
         }
+        
+        // Create a new instance of the plugin class
         $plugin_inst = new $plugin_class();
         if (!empty($plugin_conf['depends'])) {
             $dependencies = $plugin_conf['depends'];
         } else {
             $dependencies = null;
         }
+        
+        // Create a wrapper instance to add to the manager
         $plugin = new PluginInstance();
         $plugin
             ->setName($plugin_conf['name'])
