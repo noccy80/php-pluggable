@@ -32,12 +32,12 @@ use Symfony\Component\Yaml\Yaml;
 class Manager
 {
     /**
-     * @var Pluggable\Manager\Loader\PluginLoaderInterface
+     * @var Pluggable\Loader\PluginLoaderInterface
      */
     protected $loader;
     
     /**
-     * @var Pluggable\Manager\Scanner\PluginScannerInterface
+     * @var Pluggable\Scanner\PluginScannerInterface
      */
     protected $scanner;
     
@@ -63,15 +63,26 @@ class Manager
         $this->active = array();
     }
 
-    public function setLoader(LoaderInterface $loader)
+    public function setLoader(LoaderInterface $loader=null)
     {
-        $this->loader = $loader;
+        $this->loader = $loader?:(new PluginLoader);
         return $this;
     }
     
     public function getLoader()
     {
         return $this->loader;
+    }
+    
+    public function setScanner(ScannerInterface $scanner=null)
+    {
+        $this->scanner = $scanner?:(new PluginScanner);
+        return $this;
+    }
+    
+    public function getScanner()
+    {
+        return $this->scanner;
     }
     
     public function addPath($path, $prepend=false)
@@ -86,22 +97,40 @@ class Manager
         return $this;
     }
     
+    /**
+     * Scan for plugins in the configured paths.
+     * 
+     * 
+     */
     public function scan()
     {
-        $plugins = array();
+        // Scan for plugins
+        $found_plugins = array();
         foreach($this->plugin_paths as $path) {
-            $plugins = array_merge($plugins,$this->scanner->scanDirectory($path));
+            // Scan each of the directories
+            $plugins = $this->scanner->scanDirectory($this, $path);
+            $found_plugins = array_merge($found_plugins,$plugins);
         }
         
-        $this->scanPlugins($plugins);
+        // Set the plugins
+        $this->plugins = $found_plugins;
+        
+        // If a persister is assigned, ask it for the list of active plugins.
         if ($this->persister) {
+            // Get the list
             $active = $this->persister->getActivePlugins();
+            // Activate each of the plugins
             foreach($active as $plugin) {
                 $this->activatePlugin($plugin);
             }
         }
     }
     
+    /**
+     * Save the active plugins to the configured persister.
+     * 
+     * @throws \BadMethodCallException
+     */
     public function save()
     {
         if (!$this->persister) {
@@ -114,74 +143,6 @@ class Manager
             }
         }
         $this->persister->setActivePlugins($active);
-    }
-    
-    protected function scanPlugins(array $plugins)
-    {
-        $this->plugins = array();
-        foreach($plugins as $config=>$plugin) {
-            $plugin_root = dirname($config);
-            $plugin_obj = $this->readPlugin($plugin_root, $plugin);
-            if ($plugin_obj) {
-                $this->plugins[$plugin_obj->getId()] = $plugin_obj;
-            }
-        }
-    }
-    
-    protected function readPlugin($root,array $config) {
-
-        $plugin_conf = $config['plugin'];
-
-        foreach(array('id','name','version','author','class','autoload') as $key) {
-            if (!array_key_exists($key,$plugin_conf)) { 
-                error_log("Warning: {$root}: Plugin config is missing a required key: {$key}");
-                return false;
-            }
-        }
-        $autoload_ns = rtrim($plugin_conf['autoload'],"\\")."\\";
-        $plugin_class = $plugin_conf['class'];
-        spl_autoload_register(function($class) use($root,$autoload_ns) {
-            if (strncmp($autoload_ns,$class,strlen($autoload_ns)) === 0) {
-                $filename = $root."/".str_replace("\\","/",substr($class,strlen($autoload_ns))).".php";
-                if (file_exists($filename)) {
-                    require_once $filename;
-                    return true;
-                }
-            }
-        });
-        if (!class_exists($plugin_class)) {
-            $plugin_name = $plugin_conf['name'];
-            error_log("Error: Unable to find the class {$plugin_class} needed for {$plugin_name}");
-            return false;
-        }
-        $plugin_inst = new $plugin_class();
-        if (!empty($plugin_conf['depends'])) {
-            $dependencies = $plugin_conf['depends'];
-        } else {
-            $dependencies = null;
-        }
-        $plugin = new PluginInstance();
-        $plugin
-            ->setName($plugin_conf['name'])
-            ->setAuthor($plugin_conf['author'])
-            ->setVersion($plugin_conf['version'])
-            ->setPluginInstance($plugin_inst)
-            ->setDependencies($dependencies)
-            ->setPluginPath($root)
-            ->setManager($this);
-        if (!empty($plugin_conf['description'])) {
-            $descr = $plugin_conf['description'];
-            $descr_para = explode("\n\n",$descr);
-            $descr_clean = array();
-            foreach($descr_para as $para) {
-                $lines = array_map("trim",explode("\n",$para));
-                $descr_clean[] = join(" ",$lines);
-                
-            }
-            $plugin->setDescription(join("\n",$descr_clean));
-        }
-        return $plugin;
-    
     }
     
     public function getPlugin($plugin_id)

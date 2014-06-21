@@ -21,7 +21,18 @@ namespace Pluggable\Loader;
 
 use Pluggable\Plugin\PluginInterface;
 
+/**
+ * The LoaderInterface is used to activate plugins after injecting any
+ * dependencies needed or making other adjustments that need to be done
+ * on all plugins before loading.
+ * 
+ */
 interface LoaderInterface
 {
+    /**
+     * Load a plugin
+     * 
+     * @param \Pluggable\Plugin\PluginInterface $plugin
+     */
     public function loadPlugin(PluginInterface $plugin);
 }

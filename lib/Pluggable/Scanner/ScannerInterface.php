@@ -19,8 +19,9 @@
 
 namespace Pluggable\Scanner;
 
+use Pluggable\Manager\Manager;
 
 interface ScannerInterface
 {
-    public function scanDirectory($path);
+    public function scanDirectory(Manager $manager, $path);
 }

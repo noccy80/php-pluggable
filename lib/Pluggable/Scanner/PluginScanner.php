@@ -21,10 +21,14 @@ namespace Pluggable\Scanner;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use Pluggable\Manager\PluginInstance;
+use Pluggable\Manager\Manager;
 
 class PluginScanner implements ScannerInterface
 {
-    public function scanDirectory($path)
+    protected $manager;
+    
+    public function scanDirectory(Manager $manager, $path)
     {
         $finder = new Finder();
         $finder->files()->name("plugin.yml")->in($path);
@@ -46,6 +50,91 @@ class PluginScanner implements ScannerInterface
 
         }
         
+        $plugins = $this->scanPlugins($manager, $plugins);
+        
         return $plugins;
     }
+
+    /**
+     * Scans the plugins 
+     * 
+     * @param array $plugins
+     */
+    protected function scanPlugins(Manager $manager, array $plugins)
+    {
+        $found = array();
+        foreach($plugins as $config=>$plugin) {
+            $plugin_root = dirname($config);
+            $plugin_obj = $this->readPlugin($plugin_root, $plugin);
+            $plugin_obj->setManager($manager);
+            if ($plugin_obj) {
+                $found[$plugin_obj->getId()] = $plugin_obj;
+            }
+        }
+        return $found;
+    }
+
+    /**
+     * 
+     * 
+     * @param type $root
+     * @param array $config
+     * @return \Pluggable\Manager\PluginInstance|boolean
+     */
+    protected function readPlugin($root,array $config) {
+
+        $plugin_conf = $config['plugin'];
+
+        foreach(array('id','name','version','author','class','autoload') as $key) {
+            if (!array_key_exists($key,$plugin_conf)) { 
+                error_log("Warning: {$root}: Plugin config is missing a required key: {$key}");
+                return false;
+            }
+        }
+        $autoload_ns = rtrim($plugin_conf['autoload'],"\\")."\\";
+        $plugin_class = $plugin_conf['class'];
+        spl_autoload_register(function($class) use($root,$autoload_ns) {
+            if (strncmp($autoload_ns,$class,strlen($autoload_ns)) === 0) {
+                $filename = $root."/".str_replace("\\","/",substr($class,strlen($autoload_ns))).".php";
+                if (file_exists($filename)) {
+                    require_once $filename;
+                    return true;
+                }
+            }
+        });
+        if (!class_exists($plugin_class)) {
+            $plugin_name = $plugin_conf['name'];
+            error_log("Error: Unable to find the class {$plugin_class} needed for {$plugin_name}");
+            return false;
+        }
+        $plugin_inst = new $plugin_class();
+        if (!empty($plugin_conf['depends'])) {
+            $dependencies = $plugin_conf['depends'];
+        } else {
+            $dependencies = null;
+        }
+        $plugin = new PluginInstance();
+        $plugin
+            ->setName($plugin_conf['name'])
+            ->setAuthor($plugin_conf['author'])
+            ->setVersion($plugin_conf['version'])
+            ->setPluginInstance($plugin_inst)
+            ->setDependencies($dependencies)
+            ->setPluginPath($root);
+        if (!empty($plugin_conf['description'])) {
+            $descr = $plugin_conf['description'];
+            $descr_para = explode("\n\n",$descr);
+            $descr_clean = array();
+            foreach($descr_para as $para) {
+                $lines = array_map("trim",explode("\n",$para));
+                $descr_clean[] = join(" ",$lines);
+                
+            }
+            $plugin->setDescription(join("\n",$descr_clean));
+        }
+        return $plugin;
+    
+    }
+    
+    
 }
