@@ -21,7 +21,7 @@ class PluginScannerTest extends \PhpUnit_Framework_TestCase
     
     public function testScan()
     {
-        $plugins = $this->scanner->scanDirectory($this->manager, __DIR__."/../../../data");
+        $plugins = $this->scanner->scanDirectory(__DIR__."/../../../data");
         $this->assertEquals(true, is_array($plugins));
         $this->assertEquals(1, count($plugins));
         $this->assertNotNull($plugins["plugin.proper"]);
