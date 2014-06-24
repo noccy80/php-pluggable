@@ -40,13 +40,18 @@ class PluginInstance
     protected $plugin_path;
     
     protected $dependencies;
+
+    protected $id;
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
     
     public function getId()
     {
-        if (empty($this->plugin_instance)) {
-            return null;
-        }
-        return $this->plugin_instance->getId();
+        return $this->id;
     }
 
     public function setName($name)

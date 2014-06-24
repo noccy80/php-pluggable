@@ -1,0 +1,7 @@
+plugin:
+    id: plugin.badplugin
+    name: Bad plugin (should not load)
+    class: "Plugin\\BadPlugin\\BadPlugin"
+    autoload: "Plugin\\BadPlugin"
+    author: noccylabs
+    version: "1.0"

@@ -33,7 +33,7 @@ class PluginScanner implements ScannerInterface
 {
     protected $manager;
     
-    public function scanDirectory(Manager $manager, $path)
+    public function scanDirectory($path)
     {
         $finder = new Finder();
         $finder->files()->name("plugin.yml")->in($path);
@@ -46,16 +46,17 @@ class PluginScanner implements ScannerInterface
             try {
                 $conf = Yaml::parse($conf_data);
                 if (empty($conf) || empty($conf['plugin'])) {
-                    throw new \Exception("Invalid manifest (missing plugin section)");
+                    //throw new \Exception("Invalid manifest (missing plugin section)");
+                } else {
+                    $plugins[$plugin_conf] = $conf;
                 }
-                $plugins[$plugin_conf] = $conf;
             } catch (\Exception $e) {
-                throw new \Exception("Parse error in manifest {$plugin_conf}", $e);
+                // throw new \Exception("Parse error in manifest {$plugin_conf}", 0, $e);
             }
 
         }
         
-        $plugins = $this->scanPlugins($manager, $plugins);
+        $plugins = $this->scanPlugins($plugins);
         
         return $plugins;
     }
@@ -65,15 +66,19 @@ class PluginScanner implements ScannerInterface
      * 
      * @param array $plugins
      */
-    protected function scanPlugins(Manager $manager, array $plugins)
+    protected function scanPlugins(array $plugins)
     {
         $found = array();
         foreach($plugins as $config=>$plugin) {
             $plugin_root = dirname($config);
-            $plugin_obj = $this->readPlugin($plugin_root, $plugin);
-            $plugin_obj->setManager($manager);
-            if ($plugin_obj) {
-                $found[$plugin_obj->getId()] = $plugin_obj;
+            try {
+                $plugin_obj = $this->readPlugin($plugin_root, $plugin);
+                if ($plugin_obj) {
+                    $plugin_id = $plugin_obj->getId();
+                    $found[$plugin_id] = $plugin_obj;
+                }
+            } catch (\Exception $e) {
+            
             }
         }
         return $found;
@@ -131,6 +136,7 @@ class PluginScanner implements ScannerInterface
         $plugin = new PluginInstance();
         $plugin
             ->setName($plugin_conf['name'])
+            ->setId($plugin_conf['id'])
             ->setAuthor($plugin_conf['author'])
             ->setVersion($plugin_conf['version'])
             ->setPluginInstance($plugin_inst)

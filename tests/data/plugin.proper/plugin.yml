@@ -1,0 +1,7 @@
+plugin:
+    id: plugin.proper
+    name: Proper plugin (should load OK)
+    class: "Plugin\\ProperPlugin\\ProperPlugin"
+    autoload: "Plugin\\ProperPlugin\\"
+    author: noccylabs
+    version: "1.0"    

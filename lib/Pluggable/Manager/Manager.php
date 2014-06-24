@@ -108,12 +108,16 @@ class Manager
         $found_plugins = array();
         foreach($this->plugin_paths as $path) {
             // Scan each of the directories
-            $plugins = $this->scanner->scanDirectory($this, $path);
+            $plugins = $this->scanner->scanDirectory($path);
             $found_plugins = array_merge($found_plugins,$plugins);
         }
         
         // Set the plugins
         $this->plugins = $found_plugins;
+        
+        foreach($this->plugins as $plugin) {
+            $plugin->setManager($this);
+        }
         
         // If a persister is assigned, ask it for the list of active plugins.
         if ($this->persister) {

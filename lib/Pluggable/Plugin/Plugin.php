@@ -21,9 +21,21 @@ namespace Pluggable\Plugin;
 
 abstract class Plugin implements PluginInterface
 {
+    protected $id;
+
     public function getId()
     {
-        return str_replace("\\",".",strtolower(get_called_class()));
+        if (!$this->id) {
+            return str_replace("\\",".",strtolower(get_called_class()));
+        } else {
+            return $this->id;
+        }
+    }
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function activate()

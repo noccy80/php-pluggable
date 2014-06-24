@@ -23,5 +23,5 @@ use Pluggable\Manager\Manager;
 
 interface ScannerInterface
 {
-    public function scanDirectory(Manager $manager, $path);
+    public function scanDirectory($path);
 }
