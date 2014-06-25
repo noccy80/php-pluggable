@@ -21,8 +21,15 @@ namespace Pluggable\Loader;
 
 use Pluggable\Plugin\PluginInterface;
 
+/**
+ * A basic implementation of LoaderInterface
+ *
+ */
 class PluginLoader implements LoaderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function loadPlugin(PluginInterface $plugin)
     {
         $plugin->activate();
