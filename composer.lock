@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f31295d92b21deb20b8ceef1231cbbf",
+    "hash": "b893d39c94729ee9d77e0b3df6f2625e",
     "packages": [
         {
             "name": "symfony/dependency-injection",
@@ -227,7 +227,7 @@
             "source": {
                 "type": "git",
                 "url": "http://satis.noccylabs.info/packages/php-virtfs.git",
-                "reference": "a6e2126eaec587d02d963d374ee89f750b7c665e"
+                "reference": "ad7f33ece4313bd26917a4716e913f11a57cadb5"
             },
             "type": "library",
             "extra": {
@@ -255,7 +255,7 @@
                 "physfs",
                 "virtual filesystem"
             ],
-            "time": "2014-07-06 01:37:39"
+            "time": "2014-07-10 13:21:09"
         }
     ],
     "aliases": [

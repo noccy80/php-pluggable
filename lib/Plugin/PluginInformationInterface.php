@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-namespace NoccyLabs\Pluggable\Manager\MetaReader;
+namespace NoccyLabs\Pluggable\Plugin;
 
-interface MetaReaderInterface
+interface PluginInformationInterface
 {
-    public function readPluginMeta($plugin_dir);
+    public function getName();
+    public function getDescription();
+    public function getVersion();
 }
