@@ -14,8 +14,16 @@
         "symfony/finder": "2.4.*",
         "symfony/dependency-injection": "2.4.*"
     },
+    "require-dev": {
+        "noccylabs/virtfs": "dev-master"
+    },
+    "suggest": {
+        "noccylabs/virtfs": "to load plugins from zip files and more"
+    },
     "autoload": {
-        "psr-0": { "Pluggable\\":"lib/" }
+        "psr-4": {
+            "NoccyLabs\\Pluggable\\":"lib/"
+        }
     },
     "extra": {
         "branch-alias": {

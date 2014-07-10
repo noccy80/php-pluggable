@@ -1,0 +1,6 @@
+{
+    "id": "pluggable.example.bazplugin",
+    "name": "BazPlugin",
+    "class": "BazPlugin",
+    "ns": "Plugins\\BazPlugin\\"
+}

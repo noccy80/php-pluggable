@@ -1,0 +1,6 @@
+{
+    "id": "pluggable.example.barplugin",
+    "name": "BarPlugin",
+    "class": "BarPlugin",
+    "ns": "Plugins\\BarPlugin\\"
+}

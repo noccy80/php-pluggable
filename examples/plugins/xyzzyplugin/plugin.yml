@@ -1,0 +1,6 @@
+
+
+id:     pluggable.example.xyzzyplugin
+name:   XyzzyPlugin
+class:  XyzzyPlugin
+ns:     Plugins\XyzzyPlugin\

@@ -1,0 +1,6 @@
+{
+    "id": "pluggable.example.fooplugin",
+    "name": "FooPlugin",
+    "class": "FooPlugin",
+    "ns": "Plugins\\FooPlugin\\"
+}

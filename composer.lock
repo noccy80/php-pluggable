@@ -1,23 +1,24 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "32224825f822dd6b33530dd949332087",
+    "hash": "0f31295d92b21deb20b8ceef1231cbbf",
     "packages": [
         {
             "name": "symfony/dependency-injection",
-            "version": "v2.4.4",
+            "version": "v2.4.7",
             "target-dir": "Symfony/Component/DependencyInjection",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "f4f947f83aa2f1706ec8cf4f4ead6c85ea935156"
+                "reference": "ba2e9af2a8350f940641b4ed7331f15eaa7f5b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/f4f947f83aa2f1706ec8cf4f4ead6c85ea935156",
-                "reference": "f4f947f83aa2f1706ec8cf4f4ead6c85ea935156",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/ba2e9af2a8350f940641b4ed7331f15eaa7f5b25",
+                "reference": "ba2e9af2a8350f940641b4ed7331f15eaa7f5b25",
                 "shasum": ""
             },
             "require": {
@@ -62,21 +63,21 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:38:54"
+            "time": "2014-07-08 11:46:35"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.4.4",
+            "version": "v2.4.7",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "e539602e5455aa086c0e81e604745af7789e4d8a"
+                "reference": "9ef3a5aaa44ff4effce9f1a4000e480c08b1a611"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/e539602e5455aa086c0e81e604745af7789e4d8a",
-                "reference": "e539602e5455aa086c0e81e604745af7789e4d8a",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/9ef3a5aaa44ff4effce9f1a4000e480c08b1a611",
+                "reference": "9ef3a5aaa44ff4effce9f1a4000e480c08b1a611",
                 "shasum": ""
             },
             "require": {
@@ -118,21 +119,21 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-16 10:34:31"
+            "time": "2014-07-08 11:46:35"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.4.4",
+            "version": "v2.4.7",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "25e1e7d5e7376f8a92ae3b1d714d956edf33a730"
+                "reference": "3b38b869ae35d50210a8f8733c164f3bc7e091b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/25e1e7d5e7376f8a92ae3b1d714d956edf33a730",
-                "reference": "25e1e7d5e7376f8a92ae3b1d714d956edf33a730",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/3b38b869ae35d50210a8f8733c164f3bc7e091b5",
+                "reference": "3b38b869ae35d50210a8f8733c164f3bc7e091b5",
                 "shasum": ""
             },
             "require": {
@@ -167,21 +168,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-27 13:34:57"
+            "time": "2014-07-08 11:46:35"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.4.4",
+            "version": "v2.4.7",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff"
+                "reference": "e7f79223d60b10bea434d9e4ebcb47ef394d85d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
-                "reference": "65539ecde838f9c0d18b006b2101e3deb4b5c9ff",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/e7f79223d60b10bea434d9e4ebcb47ef394d85d1",
+                "reference": "e7f79223d60b10bea434d9e4ebcb47ef394d85d1",
                 "shasum": ""
             },
             "require": {
@@ -216,19 +217,54 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-18 20:37:09"
+            "time": "2014-07-08 11:46:35"
         }
     ],
     "packages-dev": [
-
+        {
+            "name": "noccylabs/virtfs",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "http://satis.noccylabs.info/packages/php-virtfs.git",
+                "reference": "a6e2126eaec587d02d963d374ee89f750b7c665e"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NoccyLabs\\VirtFs\\": "lib/"
+                }
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Christopher Vagnetoft",
+                    "email": "cvagnetoft@gmail.com"
+                }
+            ],
+            "description": "Virtual filesystems (like physfs) - with autoloading!",
+            "keywords": [
+                "autoload",
+                "physfs",
+                "virtual filesystem"
+            ],
+            "time": "2014-07-06 01:37:39"
+        }
     ],
     "aliases": [
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "noccylabs/virtfs": 20
+    },
     "platform": [
 
     ],
