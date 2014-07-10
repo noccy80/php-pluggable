@@ -34,10 +34,12 @@ $plug
            $plugin->setContainer( $container );
        }
     )
+    // load plugins
     ->findPlugins( function($id, $plugin) {
         echo "Load request: {$id}\n";
         return true;
     })
     ;
 
+echo "Loaded plugins:\n";
 var_dump($plug->getLoadedPluginIds());

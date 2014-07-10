@@ -1,8 +1,0 @@
-plugin:
-    id:         pluggable.example02.exampleplugin
-    name:       Example Plugin
-    author:     noccy
-    version:    1.0
-    tag:        [ examplehost.plugin ]
-    class:      Pluggable\Example2\ExamplePlugin
-    autoload:   Pluggable\Example2

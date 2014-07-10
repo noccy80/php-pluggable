@@ -61,4 +61,5 @@ $plug
     })
     ;
     
+echo "Loaded plugins:\n";
 var_dump($plug->getLoadedPluginIds());

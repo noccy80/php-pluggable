@@ -1,121 +1,133 @@
 noccylabs/pluggable
 ===================
 
-Pluggable provides plugin-support with a lot of nifty features such as:
+*Note: This readme applies to the 0.2.x branch of Pluggable*
 
- * Multiple plugin paths - allows you to include default plugins with your
-   project while allowing plugins to be read from one or more additional locations.
- * Symfony2 ready - Pluggable makes use of the Symfony2 event dispatcher to
-   notify and interact with the plugins. A service container can be passed to
-   the plugins if they implement the `ContainerAwareInterface` interface. The
-   configuration parser is using Symfony2 yaml.
+## Installing
 
-## Roadmap
+    $ composer require noccylabs/pluggable:0.2.x-dev
 
- * Tests need implementing.
- 
 
-## Terminology
+## Using
+    
+Create an instance of `NoccyLabs\Pluggable\Manager\PluginManager`, and add the
+backends from which you would like to load plugins:
 
- * **Manager** - The manager is in the center of the plugin framework. The manager
-   locates, enumerates and load plugins.
- * **Persister** - A class implementing the `PersisterInterface` interface to read
-   and write the list of loaded plugins between sessions.
- * **Scanner** - A class implementing the `ScannerInterface` interface to find
-   plugins in the added search paths.
- * **Loader** - A class that loads up and prepares the plugin for use by f.ex. setting
-   the container instance (the `ContainerAwareLoader` class is provided by Pluggable)
-   or other properties or checks.
-
-## What is a plugin?
-
-A plugin consists of at least two files:
-
- * a `plugin.yml` file containing metadata and plugin information
- * a php-file containing the plugin class
- 
-This is the default behavior, and it can be modified by creating your own
-custom Scanner. The main plugin class need to implement the `PluginInterface`
-interface, but you can extend from the `Plugin` base class for convenience.
-
-## Plugin manifest
-
-The configuration file is in yaml format by default:
-
-        pluggable:
-            # This is how a plugin is identified
-            id:       com.noccy.test
-            # And the host id
-            host:     com.noccy.testhost
-            # Descriptive name of the plugin
-            name:     Testplugin
-            # The version of the plugin
-            version:  1.0
-            # Author
-            author:   Noccy
-            # This is the main plugin class
-            class:    MyApp\Plugin\TestPlugin\TestPlugin
-            # A psr-4 autoloader for the plugin directory will be created
-            # for this namespace 
-            autoload: MyApp\Plugin\TestPlugin
-
-Note that it is entirely possible to read your plugin information from a .json
-file or even straight from a class if you like; it is all up to the Scanner as
-long as the data returned matches the yaml configuration.
-
-*NOT IMPLEMENTED:* The host id is enforced if `setHostId()` is called on the plugin manager. In
-this case, plugins not having the host field set to a compatible value will not
-be loaded.
-
-## Loading plugins
-
-You can load plugins manually using `Manager#activatePlugin()` or
-`PluginInstance#activate()`. Additionally, when using a persister, you can
-save and restore the plugin state as appropriate. The persister just need to
-implement `getActivePlugins()` to return an array of active plugins, and the
-`setActivePlugins(array)` to set the active plugins. Upon being called, the
-persister should write or read the data from wherever appropriate, so if you
-like to keep your code compact your main application class could be your
-persister.
-
-        use Pluggable\Manager\Manager;;
-        
-        // Create a new plugin manager
-        $manager = new Manager();
-        // Create a persister, to track loaded plugins between sessions
-        $persister = new MyPersister(__DIR__."/../plugins/state.conf");
-        
-        // Set up the paths where plugins can be located.
-        $manager
-            ->addPath(__DIR__."/../plugins")
-            ->addPath(getenv("HOME")."/.myapp/plugins")
-            ->setPersister($persister)
-            ->scan();
+        // Find and load all plugins from virtual filesystem $vfs
+        $plug = new PluginManager();
+        $plug
+            ->addBackend(new VirtFsBackend($vfs, null))
+            ->findPlugins(true)
             ;
+
+### Backends
+
+#### DirectoryBackend
+
+Directorybackend loads plugins from a set of directories. This backend can only
+load directly from source, and not via phar, zip or any other archive.
+
+        new DirectoryBackend(array(
+            "/foo/bar",
+            "/foo/biz",
+            "/var/bar"
+        ));
+
+
+#### VirtFsBackend
+
+VirtFsBackend loads plugins from a VirtFs filesystem consisting of mapped
+directories as well as zip-files.
+
+        new VirtFsBackend($vfs, "/");
+
+
+#### StaticBackend
+
+The StaticBackend returns a list of static pre-initialized plugins. Use this
+for embedded plugins f.ex. when making phar executables.
+
+        new StaticBackend(array(
+            "my.plugin.id.one" => 'My\Plugin\Class',
+            "my.plugin.id.two" => 'My\Other\Plugin\Class'
+        ));
+
+
+### Finding plugins
+
+Passing `true` to `PluginManager#findPlugins()` will load all plugins found by
+the backend:
+
+        $plug->findPlugins(true);
+
+The above is also functionally identical to:
+         
+        $plug->findPlugins( function ($plugin) {
+            return true;
+        });
+
+To select the plugins to load, do something like:
+
+        // Read plugins loaded since last time
+        $plugins_to_load = file("plugins.lst", FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         
-## Globals
-
-*NOT IMPLEMENTED*
-
-Passing globals is done via the `globals` property:
-
-        $manager = new Pluggable\Manager\Manager();
-        $manager->globals->output = $output;
-
-And in the plugin:
-
-        protected function onTest()
-        {
-            $this->globals->output->write("Hello World!\n");
-        }
-
-## Using service containers
-
-To use a service container, replace the default loader with a container aware
-loader, and pass the container as the first parameter to the constructor (or
-call on the loaders `setContainer` method)
-
-        $manager = new Pluggable\Manager\Manager();
-        $loader = new Pluggable\Loader\ContainerAwareLoader($container);
-        $manager->setLoader($loader);
+        // Use a custom callback to see if the plugin is in the list
+        $plug->findPlugins( function ($plugin) use ($plugins_to_load) {
+            $plugin_id = $plugin->getPluginId();
+            return in_array($plugin_id, $plugins_to_load);
+        });
         
+        // Write the list back out
+        $loaded_plugins = $plug->getLoadedPluginIds();
+        file_put_contents("plugins.lst", join("\n", $loaded_plugins));
+
+
+
+## Writing plugins
+
+Plugins should implement `NoccyLabs\Pluggable\Plugin\PluginInterface` or
+extend `NoccyLabs\Pluggable\Plugin\Plugin`. If you choose to use the interface,
+it is your responsibility to respond to the `PluginInterface#onActivate()` as
+well as `PluginInterface#isActivated()` to reflect the state. If you extend the
+plugin you can instead override the `Plugin#load()` method and leave the gears
+and wrenches to Pluggable.
+
+Plugins need to have a manifest (unless loaded with the `StaticBackend`) in any
+of the supported languages json, yaml or sdl. Note that yaml and sdl might require
+additional libraries be installed for the parsing to work.
+
+Language  | Filename                 | Requirements
+==========|==========================|=======================
+Json      | `plugin.json`            | 
+Yaml      | `plugin.yml`             | php5-yaml or symfony/yaml
+
+
+The file should define the following values:
+
+ * **id** - the plugin id, f.ex. foovendor.myplugin
+ * **ns** - the namespace of the plugins root directory (psr-4)
+ * **class** - the class to load from the specified ns
+ * **name** - the plugin name
+ 
+
+### Interfaces
+
+By calling `PluginManager#addInterfaceLoader()`, callbacks can be created for
+plugins implementing specific interfaces or extending specific classes. Internally
+it uses `instanceof` to compare the instance against the requested name.
+
+        class MyPlugin extends Plugin implements ICanAddInterface
+        { ... }
+
+        $plug->addInterfaceLoader("ICanAddInterface", function ($plugin) {
+            $sum = $plugin->addNumbers(5, 4);
+        });
+
+Or use it to set containers etc:
+
+        $plug->addInterfaceLoader($container_interface, function ($plugin) use ($container) {
+            $plugin->setContainer($container);
+        });
+
+
+

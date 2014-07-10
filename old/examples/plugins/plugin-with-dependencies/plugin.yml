@@ -1,9 +1,0 @@
-plugin:
-    id:         pluggable.example04.exampleplugin
-    name:       Example Plugin 4: Dependencies
-    author:     noccy
-    version:    1.0
-    tag:        [ examplehost.plugin ]
-    depends:    [ pluggable.example02.exampleplugin ]
-    class:      Pluggable\Example4\ExamplePlugin
-    autoload:   Pluggable\Example4
