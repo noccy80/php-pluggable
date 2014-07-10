@@ -19,6 +19,10 @@
 
 namespace NoccyLabs\Pluggable\Manager\MetaReader;
 
+/**
+ * Read plugin manifests stored in .yml files
+ *
+ */
 class YamlMetaReader implements MetaReaderInterface
 {
     public function readPluginMeta($plugin_dir)
@@ -36,6 +40,14 @@ class YamlMetaReader implements MetaReaderInterface
         }
     }
     
+    /**
+     * Attempt to decode Yaml data
+     *
+     * @internal
+     * @param string The yaml
+     * @return array The parsed data
+     * @throws \Exception
+     */
     protected function yaml_decode($yaml)
     {
         if (is_callable("yaml_decode")) {

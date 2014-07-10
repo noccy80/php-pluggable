@@ -38,6 +38,12 @@ class StaticBackend implements BackendInterface
         }
     }
     
+    /**
+     * Add a plugin class to the static plugin list.
+     *
+     * @param string The plugin id to enforce
+     * @param string The plugin instance or class name for the id
+     */
     public function addStaticPlugin($id, $plugin_class)
     {
         if (!is_object($plugin_class)) {
@@ -47,6 +53,9 @@ class StaticBackend implements BackendInterface
         $this->plugins[$id] = $plugin_class;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function getPlugins(array $meta_readers = null)
     {
         return $this->plugins;

@@ -19,6 +19,10 @@
 
 namespace NoccyLabs\Pluggable\Manager\MetaReader;
 
+/**
+ * Read plugin manifests stored in .json files
+ *
+ */
 class JsonMetaReader implements MetaReaderInterface
 {
     public function readPluginMeta($plugin_dir)

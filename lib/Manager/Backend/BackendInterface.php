@@ -19,7 +19,18 @@
 
 namespace NoccyLabs\Pluggable\Manager\Backend;
 
+/**
+ * Interface for plugin backends.
+ *
+ */
 interface BackendInterface
 {
+    /**
+     * Search for and return the plugins found in the locations managed by this
+     * backend.
+     *
+     * @param array<NoccyLabs\Pluggable\Manager\MetaReader\MetaReaderInterface> Metadata readers to use
+     * @return array Found plugins (as NoccyLabs\Pluggable\Plugin\PluginInterface)
+     */
     public function getPlugins(array $meta_readers = null);
 }

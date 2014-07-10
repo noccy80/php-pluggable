@@ -19,6 +19,10 @@
 
 namespace NoccyLabs\Pluggable\Plugin;
 
+/**
+ * Plugin base class.
+ *
+ */
 abstract class Plugin implements PluginInterface
 {
     protected $plugin_id = null;
@@ -27,28 +31,43 @@ abstract class Plugin implements PluginInterface
     
     protected $root = null;
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPluginId()
     {
         return $this->plugin_id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setPluginId($plugin_id)
     {
         $this->plugin_id = $plugin_id;
         return $this;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function setRoot($root)
     {
         $this->root = $root;
         return $this;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function isActivated()
     {
         return $this->is_activated;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function onActivate()
     {
         if (is_callable(array($this,"load"))) {
@@ -57,6 +76,9 @@ abstract class Plugin implements PluginInterface
         $this->is_activated = true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function onDeactivate()
     {
         $this->is_activated = false;

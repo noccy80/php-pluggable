@@ -19,12 +19,44 @@
 
 namespace NoccyLabs\Pluggable\Plugin;
 
+/**
+ * Interface for plugins 
+ *
+ *
+ */
 interface PluginInterface
 {
+    /**
+     * Set the plugin id
+     *
+     * @param string The plugin id as specified in the manifest
+     */
     public function setPluginId($id);
+
+    /**
+     * Get the plugin id
+     *
+     * @return string The plugin id
+     */
     public function getPluginId();
+    
     public function setRoot($root);
+
+    /**
+     * Called when the plugin is activated.
+     *
+     */    
     public function onActivate();
+ 
+    /**
+     * Called when the plugin is deactivated.
+     *
+     */   
     public function onDeactivate();
+ 
+    /**
+     * Should return true if this plugin has been successfully activated,
+     * false otherwise.
+     */   
     public function isActivated();
 }

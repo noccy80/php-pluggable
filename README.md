@@ -3,6 +3,11 @@ noccylabs/pluggable
 
 *Note: This readme applies to the 0.2.x branch of Pluggable*
 
+Pluggable is a plugin manager for PHP. It provides a bare, controllable framework
+for loading and unloading code stubs on demand directly from the filesystem or
+even from .zip or .phar files.
+
+
 ## Installing
 
     $ composer require noccylabs/pluggable:0.2.x-dev
@@ -22,7 +27,26 @@ backends from which you would like to load plugins:
 
 ### Backends
 
-#### DirectoryBackend
+You can add more than one backend. The order in which they are added is relevant
+if a plugin is found in more than one location. For example, imagine the following
+scenario:
+
+ * Plugin `plugin.foo` is shipped with `fooapp.phar` and loaded using a
+   `StaticBackend`.
+ * The file `~/.fooapp/plugins/plugin.foo.zip` also contains `plugin.foo` and
+   is loaded via the `VirtFsBackend`.
+
+When the plugin `plugin.foo` is loaded, it will be loaded from the VirtFs backend,
+as it is the last one encountered. This allows you to include static plugins that
+can be upgraded externally.
+
+        $plug
+            ->addBackend(new StaticBackend(..))
+            ->addBackend(new VirtFsBackend(..))
+            
+
+
+### DirectoryBackend
 
 Directorybackend loads plugins from a set of directories. This backend can only
 load directly from source, and not via phar, zip or any other archive.
@@ -34,7 +58,7 @@ load directly from source, and not via phar, zip or any other archive.
         ));
 
 
-#### VirtFsBackend
+### VirtFsBackend
 
 VirtFsBackend loads plugins from a VirtFs filesystem consisting of mapped
 directories as well as zip-files.
@@ -42,7 +66,7 @@ directories as well as zip-files.
         new VirtFsBackend($vfs, "/");
 
 
-#### StaticBackend
+### StaticBackend
 
 The StaticBackend returns a list of static pre-initialized plugins. Use this
 for embedded plugins f.ex. when making phar executables.
@@ -96,10 +120,11 @@ Plugins need to have a manifest (unless loaded with the `StaticBackend`) in any
 of the supported languages json, yaml or sdl. Note that yaml and sdl might require
 additional libraries be installed for the parsing to work.
 
-Language  | Filename                 | Requirements
-==========|==========================|=======================
-Json      | `plugin.json`            | 
-Yaml      | `plugin.yml`             | php5-yaml or symfony/yaml
+
+    | Language  | Filename                 | Requirements                |
+    |===========|==========================|=============================|
+    | Json      | `plugin.json`            | php5-json                   |
+    | Yaml      | `plugin.yml`             | php5-yaml or symfony/yaml   |
 
 
 The file should define the following values:

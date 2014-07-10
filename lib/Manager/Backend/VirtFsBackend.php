@@ -35,6 +35,9 @@ class VirtFsBackend implements BackendInterface
         $this->virt_fs = $virt_fs;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function getPlugins(array $meta_readers = null)
     {
         $found = array();
@@ -57,7 +60,15 @@ class VirtFsBackend implements BackendInterface
         
         return $found;
     }
-    
+
+    /**
+     * Read metadata from all readers until we get a proper result.
+     *
+     * @internal
+     * @param string The plugin name 
+     * @param array The metadata readers readers to test
+     * @return array|null Parsed metadata if any
+     */
     protected function readPluginMeta($plugin_name, array $readers)
     {
         $vfs_proto = "plugins";
@@ -68,6 +79,15 @@ class VirtFsBackend implements BackendInterface
         }
     }
     
+    /**
+     * Prepare the plugin for using by registering autoloader and creating a
+     * new instance.
+     *
+     * @internal
+     * @param array The plugin metadata
+     * @param string The plugin name 
+     * @return NoccyLabs\Pluggable\Plugin\PluginInterface Loaded plugin
+     */
     protected function preparePlugin($plugin_meta, $plugin_name)
     {
 

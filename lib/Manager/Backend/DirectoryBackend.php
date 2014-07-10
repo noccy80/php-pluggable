@@ -21,6 +21,10 @@ namespace NoccyLabs\Pluggable\Manager\Backend;
 
 use NoccyLabs\VirtFs\VirtFs;
 
+/**
+ * Load plugins directly from a list of specified directories.
+ *
+ */
 class DirectoryBackend implements BackendInterface
 {
     protected $paths = array();
@@ -32,8 +36,21 @@ class DirectoryBackend implements BackendInterface
         }
     }
     
+    /**
+     * Add a filesystem path to the backend.
+     *
+     * @param string The path to add
+     */
     public function addPath($path)
     {
         $this->paths[] = $path;
+        return $this;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function getPlugins(array $meta_readers = null)
+    {
     }
 }
