@@ -23,6 +23,7 @@ use NoccyLabs\Pluggable\Manager\Backend\BackendInterface;
 use NoccyLabs\Pluggable\Plugin\PluginInterface;
 use NoccyLabs\Pluggable\Manager\MetaReader\JsonMetaReader;
 use NoccyLabs\Pluggable\Manager\MetaReader\YamlMetaReader;
+use NoccyLabs\Pluggable\Manager\MetaReader\IniMetaReader;
 use NoccyLabs\Pluggable\Manager\MetaReader\MetaReaderInterface;
 
 class PluginManager
@@ -42,6 +43,7 @@ class PluginManager
     {
         $this->meta_readers[] = new JsonMetaReader();
         $this->meta_readers[] = new YamlMetaReader();
+        $this->meta_readers[] = new IniMetaReader();
     }
 
     /**

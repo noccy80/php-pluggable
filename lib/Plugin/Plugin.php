@@ -31,6 +31,16 @@ abstract class Plugin implements PluginInterface
     
     protected $root = null;
 
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setMetaData(array $meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
+
     /**
      * {@inheritDoc}
      */

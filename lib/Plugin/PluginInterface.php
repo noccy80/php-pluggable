@@ -26,6 +26,8 @@ namespace NoccyLabs\Pluggable\Plugin;
  */
 interface PluginInterface
 {
+    public function setMetaData(array $meta);
+
     /**
      * Set the plugin id
      *

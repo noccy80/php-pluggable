@@ -51,6 +51,7 @@ class VirtFsBackend implements BackendInterface
                 if ($plugin_meta) {
                     $plugin = $this->preparePlugin($plugin_meta, $plugin_name);
                     $id = $plugin_meta['id'];
+                    $plugin->setMetaData($plugin_meta);
                     $plugin->setPluginId($id);
                     $plugin->setRoot("plugins://{$plugin_name}");
                     $found[$id] = $plugin;
@@ -97,7 +98,7 @@ class VirtFsBackend implements BackendInterface
 
         // Now we can assemble the class name and create an instance of the actual
         // plugin.
-        $plugin_class = $plugin_meta['ns'].$plugin_meta['name'];
+        $plugin_class = $plugin_meta['ns'].$plugin_meta['class'];
         $plugin = new $plugin_class();
         // Return the plugin
         return $plugin;
