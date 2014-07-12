@@ -183,7 +183,7 @@ class PluginManager
         }
         return $loaded;
     }
-    
+
     public function getLoadedPlugins()
     {
         $loaded = array();
@@ -199,4 +199,5 @@ class PluginManager
     {
         return $this->plugins;
     }
+
 }
