@@ -15,7 +15,7 @@
         "symfony/dependency-injection": "2.4.*"
     },
     "require-dev": {
-        "noccylabs/virtfs": "dev-master"
+        "noccylabs/virtfs": "0.1.*"
     },
     "suggest": {
         "noccylabs/virtfs": "to load plugins from zip files and more"
