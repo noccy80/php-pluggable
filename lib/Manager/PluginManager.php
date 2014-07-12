@@ -104,15 +104,19 @@ class PluginManager
      *
      * @param bool|callable Boolean or callback to return true if the plugin should be loaded
      */
-    public function findPlugins($load=false)
+    public function findPlugins($load=false, array $meta_readers=null)
     {
         $found_plugins = array();
+        
+        if (!$meta_readers) {
+            $meta_readers = $this->meta_readers;
+        }
     
         // Assemble a list of plugins, if a plugin exists in more than one
         // location, the one that was found last will take precedence.
         foreach($this->backends as $backend)
         {
-            $plugins = $backend->getPlugins($this->meta_readers);
+            $plugins = $backend->getPlugins($meta_readers);
             foreach((array)$plugins as $plugin) {
                 if (!($plugin instanceof PluginInterface)) {
                     throw new \Exception("BackendInterface#getPlugins() should only return PluginInterface derivatives");
@@ -159,6 +163,16 @@ class PluginManager
         $plugin->onActivate();
     }
     
+    public function getPlugin($id)
+    {
+        foreach($this->plugins as $plugin) {
+            if ($plugin->getPluginId() == $id) {
+                return $plugin;
+            }
+        }
+        return false;
+    }
+    
     public function getLoadedPluginIds()
     {
         $loaded = array();
@@ -168,5 +182,21 @@ class PluginManager
             }
         }
         return $loaded;
+    }
+    
+    public function getLoadedPlugins()
+    {
+        $loaded = array();
+        foreach($this->plugins as $plugin) {
+            if ($plugin->isActivated()) {
+                $loaded[] = $plugin;
+            }
+        }
+        return $loaded;
+    }
+
+    public function getAllPlugins()
+    {
+        return $this->plugins;
     }
 }
