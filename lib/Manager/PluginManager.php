@@ -86,7 +86,8 @@ class PluginManager
     protected function runInterfaceLoaders(PluginInterface $plugin)
     {
         foreach($this->interface_loaders as $interface_name => $callbacks) {
-            if ($plugin instanceof $interface_name) {
+            if (($plugin instanceof $interface_name) 
+                || fnmatch($interface_name, get_class($plugin))) {
                 foreach($callbacks as $callback) {
                     call_user_func($callback, $plugin, $this);
                 }

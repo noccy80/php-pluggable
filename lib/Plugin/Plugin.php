@@ -58,6 +58,22 @@ abstract class Plugin implements PluginInterface
         return $this;
     }
     
+    public function getPluginName()
+    {
+        if (!array_key_exists("name", $this->meta)) {
+            return false;
+        }
+        return $this->meta["name"];
+    }
+
+    public function getPluginVersion()
+    {
+        if (!array_key_exists("version", $this->meta)) {
+            return false;
+        }
+        return $this->meta["version"];
+    }
+    
     /**
      * {@inheritDoc}
      */

@@ -52,5 +52,76 @@ class DirectoryBackend implements BackendInterface
      */
     public function getPlugins(array $meta_readers = null)
     {
+        $found = array();
+
+        $plugins = array();
+        foreach($this->paths as $path) {
+            $paths = glob($path.'/*');
+            $plugins = array_merge($plugins, $paths);
+        }
+        foreach($plugins as $plugin_src) {
+            if (!fnmatch("*.zip", $plugin_src)) {
+                $plugin_meta = $this->readPluginMeta($plugin_src, $meta_readers);
+                if ($plugin_meta) {
+                    $plugin = $this->preparePlugin($plugin_meta, $plugin_src);
+                    $id = $plugin_meta['id'];
+                    $plugin->setMetaData($plugin_meta);
+                    $plugin->setPluginId($id);
+                    $plugin->setRoot($plugin_src);
+                    $found[$id] = $plugin;
+                }
+            }
+        }
+        
+        return $found;
     }
+
+    /**
+     * Read metadata from all readers until we get a proper result.
+     *
+     * @internal
+     * @param string The plugin name 
+     * @param array The metadata readers readers to test
+     * @return array|null Parsed metadata if any
+     */
+    protected function readPluginMeta($plugin_root, array $readers)
+    {
+        $vfs_proto = "plugins";
+        foreach($readers as $reader) {
+            $ret = $reader->readPluginMeta($plugin_root);
+            if ($ret) { return $ret; }
+        }
+    }
+    
+    /**
+     * Prepare the plugin for using by registering autoloader and creating a
+     * new instance.
+     *
+     * @internal
+     * @param array The plugin metadata
+     * @param string The plugin name 
+     * @return NoccyLabs\Pluggable\Plugin\PluginInterface Loaded plugin
+     */
+    protected function preparePlugin($plugin_meta, $plugin_root)
+    {
+        \spl_autoload_register( function($class) use ($plugin_meta, $plugin_root) {
+            $ns = $plugin_meta['ns'];
+            if (strncmp($class, $ns, strlen($ns)) === 0) {
+                $plugin_file = $plugin_root.strtr(str_replace($ns, "", $class),"\\","/").".php";
+                if (file_exists($plugin_file)) {
+                    require_once $plugin_file;
+                    return true;
+                }
+            }
+        });
+        
+    
+        // Now we can assemble the class name and create an instance of the actual
+        // plugin.
+        $plugin_class = $plugin_meta['class'];
+        $plugin = new $plugin_class();
+        // Return the plugin
+        return $plugin;
+    }
+
 }

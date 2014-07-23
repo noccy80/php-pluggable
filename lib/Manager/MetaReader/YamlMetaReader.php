@@ -32,7 +32,7 @@ class YamlMetaReader implements MetaReaderInterface
             $info = $this->yaml_decode($yaml);
             foreach(array("id", "name", "ns", "class") as $req) {
                 if (!array_key_exists($req, $info)) {
-                    error_log("Manifest {$file} missing required key {$req}");
+                    error_log("Warning: Manifest {$file} missing required key {$req}");
                     return false;
                 }
             }
