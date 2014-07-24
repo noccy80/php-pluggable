@@ -73,6 +73,14 @@ abstract class Plugin implements PluginInterface
         }
         return $this->meta["version"];
     }
+
+    public function getPluginAuthor()
+    {
+        if (!array_key_exists("author", $this->meta)) {
+            return false;
+        }
+        return $this->meta["author"];
+    }
     
     /**
      * {@inheritDoc}
