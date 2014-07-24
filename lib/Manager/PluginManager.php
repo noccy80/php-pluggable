@@ -31,6 +31,8 @@ class PluginManager
     /** @var array Callbacks to load various interfaces; name as key */
     protected $interface_loaders = array();
 
+    protected $generic_loaders = array();
+
     /** @var array<BackendInterface> The backends to use when finding/loading plugins */
     protected $backends = array();
 
@@ -77,14 +79,23 @@ class PluginManager
         return $this;
     }
     
+    public function addLoader(callable $loader_callback)
+    {
+        $this->generic_loaders[] = $loader_callback;
+        return $this;
+    }
+    
     /**
      * Call the applicable loader callbacks with the plugin and the manager
      * as its parameters.
      *
      *
      */
-    protected function runInterfaceLoaders(PluginInterface $plugin)
+    protected function runLoaders(PluginInterface $plugin)
     {
+        foreach($this->generic_loaders as $callback) {
+            call_user_func($callback, $plugin, $this);
+        }
         foreach($this->interface_loaders as $interface_name => $callbacks) {
             if (($plugin instanceof $interface_name) 
                 || fnmatch($interface_name, get_class($plugin))) {
@@ -156,7 +167,7 @@ class PluginManager
     
     protected function setupPlugin(PluginInterface $plugin)
     {
-        $this->runInterfaceLoaders($plugin);
+        $this->runLoaders($plugin);
     }
     
     public function loadPlugin(PluginInterface $plugin)

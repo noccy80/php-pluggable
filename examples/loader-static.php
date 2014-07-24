@@ -28,6 +28,9 @@ $plug
     // load static plugins
     ->addBackend( new StaticBackend($plugin_classes) )
     // add container to container aware plugins
+    ->addLoader( function($plugin, $manager) {
+        echo "Now loading ".get_class($plugin)."\n";
+    })
     ->addInterfaceLoader(
        'Symfony\Component\DependencyInjection\ContainerAwareInterface', 
        function (Plugin $plugin) use ($container) {

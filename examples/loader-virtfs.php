@@ -49,6 +49,9 @@ $plug
     //->addBackend( new VirtFsBackend($vfs, null) )
     // load static plugins
     ->addBackend( new VirtFsBackend($vfs_plugins, null) )
+    ->addLoader( function($plugin, $manager) {
+        echo "Now loading ".get_class($plugin)."\n";
+    })
     ->addInterfaceLoader(
        'Symfony\Component\DependencyInjection\ContainerAwareInterface', 
        function (Plugin $plugin) use ($container) {
