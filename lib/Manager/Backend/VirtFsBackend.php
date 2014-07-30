@@ -47,14 +47,16 @@ class VirtFsBackend implements BackendInterface
         foreach($plugins as $plugin_src) {
             if (!fnmatch("*.zip", $plugin_src)) {
                 $plugin_name = basename($plugin_src);
-                $plugin_meta = $this->readPluginMeta($plugin_name, $meta_readers);
+                $plugin_meta = $this->readPluginMeta($plugin_src, $meta_readers);
                 if ($plugin_meta) {
                     $plugin = $this->preparePlugin($plugin_meta, $plugin_name);
-                    $id = $plugin_meta['id'];
-                    $plugin->setMetaData($plugin_meta);
-                    $plugin->setPluginId($id);
-                    $plugin->setRoot("plugins://{$plugin_name}");
-                    $found[$id] = $plugin;
+                    if ($plugin) {
+                        $id = $plugin_meta['id'];
+                        $plugin->setMetaData($plugin_meta);
+                        $plugin->setPluginId($id);
+                        $plugin->setRoot("plugins://{$plugin_name}");
+                        $found[$id] = $plugin;
+                    }
                 }
             }
         }
@@ -70,9 +72,10 @@ class VirtFsBackend implements BackendInterface
      * @param array The metadata readers readers to test
      * @return array|null Parsed metadata if any
      */
-    protected function readPluginMeta($plugin_name, array $readers)
+    protected function readPluginMeta($plugin_src, array $readers)
     {
         $vfs_proto = "plugins";
+        $plugin_name = basename($plugin_src);
         $plugin_root = "{$vfs_proto}://{$plugin_name}";
         foreach($readers as $reader) {
             try {
@@ -82,6 +85,7 @@ class VirtFsBackend implements BackendInterface
                 return false;
             }
         }
+        return false;
     }
     
     /**
@@ -102,7 +106,10 @@ class VirtFsBackend implements BackendInterface
 
         // Now we can assemble the class name and create an instance of the actual
         // plugin.
-        $plugin_class = $plugin_meta['ns'].$plugin_meta['class'];
+        $plugin_class = $plugin_meta['class'];
+        if (!class_exists($plugin_class)) {
+            return false;
+        }
         $plugin = new $plugin_class();
         // Return the plugin
         return $plugin;

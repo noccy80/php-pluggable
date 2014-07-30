@@ -48,9 +48,16 @@ class PluginManager
 
     public function __construct()
     {
-        $this->meta_readers[] = new JsonMetaReader();
-        $this->meta_readers[] = new YamlMetaReader();
-        $this->meta_readers[] = new IniMetaReader();
+        $this->meta_readers = $this->getDefaultMetaReaders();
+    }
+    
+    public function getDefaultMetaReaders()
+    {
+        return array(
+            new JsonMetaReader(),
+            new YamlMetaReader(),
+            new IniMetaReader()
+        );
     }
 
     /**

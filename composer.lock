@@ -194,17 +194,17 @@
         },
         {
             "name": "noccylabs/virtfs",
-            "version": "0.1.1",
+            "version": "0.1.1.1",
             "source": {
                 "type": "git",
                 "url": "http://satis.noccylabs.info/packages/php-virtfs.git",
-                "reference": "7be9c0dd0011a576d16ad4b3ab3f75977c3f22f1"
+                "reference": "480a5e33421b1c81fddf9a4820d5742ebcbfbd7c"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://satis.noccylabs.info/dist/noccylabs-virtfs-0.1.1-f7b896.tar",
-                "reference": "7be9c0dd0011a576d16ad4b3ab3f75977c3f22f1",
-                "shasum": "28c8d9b4fa2ddde83256cc8934025df66781a149"
+                "url": "http://satis.noccylabs.info/dist/noccylabs-virtfs-0.1.1.1-078619.tar",
+                "reference": "480a5e33421b1c81fddf9a4820d5742ebcbfbd7c",
+                "shasum": "6cc7dd702eda07c73e864e36c2f19faf9e05871a"
             },
             "require": {
                 "noccylabs/filesysteminterface": "0.1.*",
@@ -236,7 +236,7 @@
                 "physfs",
                 "virtual filesystem"
             ],
-            "time": "2014-07-24 20:40:52"
+            "time": "2014-07-30 18:03:08"
         },
         {
             "name": "psr/log",

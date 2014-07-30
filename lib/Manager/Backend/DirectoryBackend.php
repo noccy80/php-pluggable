@@ -64,11 +64,13 @@ class DirectoryBackend implements BackendInterface
                 $plugin_meta = $this->readPluginMeta($plugin_src, $meta_readers);
                 if ($plugin_meta) {
                     $plugin = $this->preparePlugin($plugin_meta, $plugin_src);
-                    $id = $plugin_meta['id'];
-                    $plugin->setMetaData($plugin_meta);
-                    $plugin->setPluginId($id);
-                    $plugin->setRoot($plugin_src);
-                    $found[$id] = $plugin;
+                    if ($plugin) {
+                        $id = $plugin_meta['id'];
+                        $plugin->setMetaData($plugin_meta);
+                        $plugin->setPluginId($id);
+                        $plugin->setRoot($plugin_src);
+                        $found[$id] = $plugin;
+                    } 
                 }
             }
         }
@@ -95,6 +97,7 @@ class DirectoryBackend implements BackendInterface
                 return false;
             }
         }
+        return false;
     }
     
     /**
@@ -121,8 +124,11 @@ class DirectoryBackend implements BackendInterface
         
     
         // Now we can assemble the class name and create an instance of the actual
-        // plugin.
+        // plugin, or throw an exception otherwise
         $plugin_class = $plugin_meta['class'];
+        if (!class_exists($plugin_class)) {
+            return false;
+        }
         $plugin = new $plugin_class();
         // Return the plugin
         return $plugin;

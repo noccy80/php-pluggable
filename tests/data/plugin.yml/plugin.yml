@@ -1,6 +1,6 @@
 id: plugin.yml
 name: Plugin with plugin.yml manifest
-class: Plugin\PluginYml\PluginIni
+class: Plugin\PluginYml\PluginYml
 ns: Plugin\PluginYml
 author: noccylabs
 version: 1.0  
