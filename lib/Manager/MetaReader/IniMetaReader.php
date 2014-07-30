@@ -19,6 +19,8 @@
 
 namespace NoccyLabs\Pluggable\Manager\MetaReader;
 
+use NoccyLabs\Pluggable\Manager\Exception\BadManifestException;
+
 /**
  * Read plugin manifests stored in .json files
  *
@@ -34,11 +36,12 @@ class IniMetaReader implements MetaReaderInterface
             $info = array_merge($infos, $info);
             foreach(array("id", "name", "ns", "class") as $req) {
                 if (!array_key_exists($req, $info)) {
-                    error_log("Manifest {$file} missing required key {$req}");
-                    return false;
+                    throw new BadManifestException("Manifest {$file} missing required key {$req}");
                 }
             }
             return $info;
+        } else {
+            return false;
         }
     
     }

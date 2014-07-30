@@ -49,7 +49,9 @@ class StaticBackend implements BackendInterface
         if (!is_object($plugin_class)) {
             $plugin_class = new $plugin_class;
         }
-        $plugin_class->setPluginId($id);
+        if (is_callable(array($plugin_class, "setPluginId"))) {
+            $plugin_class->setPluginId($id);
+        }
         $this->plugins[$id] = $plugin_class;
     }
     

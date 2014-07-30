@@ -26,6 +26,11 @@ namespace NoccyLabs\Pluggable\Plugin;
  */
 interface PluginInterface
 {
+    /**
+     * Set the plugin meta data as read from the plugin.yml file.
+     *
+     * @param array The plugin configuration metadata
+     */
     public function setMetaData(array $meta);
 
     /**
@@ -41,7 +46,13 @@ interface PluginInterface
      * @return string The plugin id
      */
     public function getPluginId();
-    
+ 
+    /**
+     * Assign the root directory of the plugin, so that the plugin can find
+     * files relative to its root.
+     *
+     * @param string The plugin root path/uri
+     */   
     public function setRoot($root);
 
     /**

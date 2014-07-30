@@ -1,0 +1,7 @@
+id: plugin.yml
+name: Plugin with plugin.yml manifest
+class: Plugin\PluginYml\PluginIni
+ns: Plugin\PluginYml
+author: noccylabs
+version: 1.0  
+extra_user_data: foo

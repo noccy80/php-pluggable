@@ -31,6 +31,7 @@ abstract class Plugin implements PluginInterface
     
     protected $root = null;
 
+    protected $meta = array();
     
     /**
      * {@inheritDoc}
@@ -38,6 +39,9 @@ abstract class Plugin implements PluginInterface
     public function setMetaData(array $meta)
     {
         $this->meta = $meta;
+        if (!$this->plugin_id && array_key_exists("id",$meta)) {
+            $this->plugin_id = $meta['id'];
+        }
         return $this;
     }
 
@@ -58,6 +62,9 @@ abstract class Plugin implements PluginInterface
         return $this;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function getPluginName()
     {
         if (!array_key_exists("name", $this->meta)) {
@@ -66,6 +73,9 @@ abstract class Plugin implements PluginInterface
         return $this->meta["name"];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPluginVersion()
     {
         if (!array_key_exists("version", $this->meta)) {
@@ -74,6 +84,9 @@ abstract class Plugin implements PluginInterface
         return $this->meta["version"];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPluginAuthor()
     {
         if (!array_key_exists("author", $this->meta)) {

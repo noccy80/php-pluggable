@@ -1,0 +1,2 @@
+phpunit --coverage-html docs/generated/coverage
+apigen --source lib --destination docs/generated/reference

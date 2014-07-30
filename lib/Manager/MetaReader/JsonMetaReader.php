@@ -19,6 +19,8 @@
 
 namespace NoccyLabs\Pluggable\Manager\MetaReader;
 
+use NoccyLabs\Pluggable\Manager\Exception\BadManifestException;
+
 /**
  * Read plugin manifests stored in .json files
  *
@@ -28,16 +30,19 @@ class JsonMetaReader implements MetaReaderInterface
     public function readPluginMeta($plugin_dir)
     {
         $file = "{$plugin_dir}/plugin.json";
-        if (($json = @file_get_contents($file))) {
+        if (file_exists($file) && (($json = @file_get_contents($file)))) {
             $info = json_decode($json, JSON_OBJECT_AS_ARRAY);
+            if (($err = json_last_error())) {
+                $errmsg = json_last_error_msg();
+                throw new BadManifestException("Manifest {$file} contains invalid json: {$errmsg}");
+            }
             foreach(array("id", "name", "ns", "class") as $req) {
                 if (!array_key_exists($req, $info)) {
-                    error_log("Manifest {$file} missing required key {$req}");
-                    return false;
+                    throw new BadManifestException("Manifest {$file} missing required key {$req}");
                 }
             }
             return $info;
         }
-    
+        return false;
     }
 }

@@ -88,8 +88,12 @@ class DirectoryBackend implements BackendInterface
     {
         $vfs_proto = "plugins";
         foreach($readers as $reader) {
-            $ret = $reader->readPluginMeta($plugin_root);
-            if ($ret) { return $ret; }
+            try {
+                $ret = $reader->readPluginMeta($plugin_root);
+                if ($ret) { return $ret; }
+            } catch (\Exception $e) {
+                return false;
+            }
         }
     }
     

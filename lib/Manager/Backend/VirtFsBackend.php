@@ -75,8 +75,12 @@ class VirtFsBackend implements BackendInterface
         $vfs_proto = "plugins";
         $plugin_root = "{$vfs_proto}://{$plugin_name}";
         foreach($readers as $reader) {
-            $ret = $reader->readPluginMeta($plugin_root);
-            if ($ret) { return $ret; }
+            try {
+                $ret = $reader->readPluginMeta($plugin_root);
+                if ($ret) { return $ret; }
+            } catch (\Exception $e) {
+                return false;
+            }
         }
     }
     

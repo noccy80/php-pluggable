@@ -19,6 +19,8 @@
 
 namespace NoccyLabs\Pluggable\Manager\MetaReader;
 
+use NoccyLabs\Pluggable\Manager\Exception\BadManifestException;
+
 /**
  * Read plugin manifests stored in .yml files
  *
@@ -32,12 +34,12 @@ class YamlMetaReader implements MetaReaderInterface
             $info = $this->yaml_decode($yaml);
             foreach(array("id", "name", "ns", "class") as $req) {
                 if (!array_key_exists($req, $info)) {
-                    error_log("Warning: Manifest {$file} missing required key {$req}");
-                    return false;
+                    throw new BadManifestException("Manifest {$file} missing required key {$req}");
                 }
             }
             return $info;
         }
+        return false;
     }
     
     /**

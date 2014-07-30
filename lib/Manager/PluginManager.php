@@ -26,6 +26,11 @@ use NoccyLabs\Pluggable\Manager\MetaReader\YamlMetaReader;
 use NoccyLabs\Pluggable\Manager\MetaReader\IniMetaReader;
 use NoccyLabs\Pluggable\Manager\MetaReader\MetaReaderInterface;
 
+/**
+ * The PluginManager class loads and manages plugins through backends and 
+ * metadata readers. 
+ *
+ */
 class PluginManager
 {
     /** @var array Callbacks to load various interfaces; name as key */
@@ -56,7 +61,7 @@ class PluginManager
     {
         // Throw exception if already added
         if (in_array($backend, $this->backends)) {
-            throw new \RuntimeException("Backend already registered with plugin manager");
+            throw new Exception\PluggableException("Backend already registered with plugin manager");
         }
         // Add to list of backends
         $this->backends[] = $backend;
@@ -65,9 +70,15 @@ class PluginManager
     }
 
     /**
-     * Add a loader to activate for a specific interface.
+     * Add a loader to activate for a specific interface, allowing injection of data or
+     * dependencies.
      *
+     * The callback will receive the plugin instance and the plugin manager instance
+     * as its only two parameters.
      *
+     * @param string The interface or class name to trigger on
+     * @param callable The loader callback. 
+     * @return NoccyLabs\Pluggable\Manager\PluginManager $this
      */
     public function addInterfaceLoader($iface_name, callable $loader_callback)
     {
@@ -79,6 +90,16 @@ class PluginManager
         return $this;
     }
     
+    /**
+     * Add a loader to activate for all plugins, allowing injection of data or
+     * dependencies.
+     *
+     * The callback will receive the plugin instance and the plugin manager instance
+     * as its only two parameters.
+     *
+     * @param callable The loader callback. 
+     * @return NoccyLabs\Pluggable\Manager\PluginManager $this
+     */
     public function addLoader(callable $loader_callback)
     {
         $this->generic_loaders[] = $loader_callback;
@@ -131,7 +152,7 @@ class PluginManager
             $plugins = $backend->getPlugins($meta_readers);
             foreach((array)$plugins as $plugin) {
                 if (!($plugin instanceof PluginInterface)) {
-                    throw new \Exception("BackendInterface#getPlugins() should only return PluginInterface derivatives");
+                    throw new Exception\PluggableException("BackendInterface#getPlugins() should only return PluginInterface derivatives");
                 }
                 $id = $plugin->getPluginId();
                 $found_plugins[$id] = $plugin;
@@ -143,7 +164,7 @@ class PluginManager
         // Go over the final list of plugins, and prepare them for operation.
         foreach($found_plugins as $id=>$plugin) {
             if (!$id) {
-                throw new \RuntimeException("Plugin id can not be null");
+                throw new Exception\PluggableException("Plugin id can not be null");
             }
             $plugin->setPluginId($id);
             $this->setupPlugin($plugin);
@@ -165,16 +186,32 @@ class PluginManager
          return $this;
     }
     
+    /**
+     * Run the loaders on a plugin instance
+     *
+     * @param NoccyLabs\Pluggable\Plugin¿pluginInterface The plugin to setup
+     */
     protected function setupPlugin(PluginInterface $plugin)
     {
         $this->runLoaders($plugin);
     }
     
+    /**
+     * Load (activate) a plugin instance
+     *
+     * @param NoccyLabs\Pluggable\Plugin¿pluginInterface The plugin to load
+     */
     public function loadPlugin(PluginInterface $plugin)
     {
         $plugin->onActivate();
     }
     
+    /**
+     * Get a plugin instance by its ID
+     *
+     * @param string The plugin ID to query
+     * @return NoccyLabs\Pluggable\Plugin\PluginInterface|false The plugin instance or false
+     */
     public function getPlugin($id)
     {
         foreach($this->plugins as $plugin) {
@@ -184,7 +221,14 @@ class PluginManager
         }
         return false;
     }
-    
+
+    /**
+     * Get an array containing the IDs of the loaded plugins. This can be used
+     * to persist the set, by providing the same list to a custom loader function,
+     * letting the user enable and disable plugins as needed.
+     * 
+     * @return array<string> The IDs of the loaded plugins
+     */    
     public function getLoadedPluginIds()
     {
         $loaded = array();
@@ -196,6 +240,11 @@ class PluginManager
         return $loaded;
     }
 
+    /**
+     * Get the loaded plugin instances
+     *
+     * @return array<NoccyLabs\Pluggable\Plugin\PluginInterface> The loaded plugins
+     */
     public function getLoadedPlugins()
     {
         $loaded = array();
@@ -206,7 +255,13 @@ class PluginManager
         }
         return $loaded;
     }
-
+    
+    /**
+     * Get all plugins, including the ones that are not loaded. To check if a
+     * plugin is loaded, call on its isActivated() method.
+     *
+     * @return array<NoccyLabs\Pluggable\Plugin\PluginInterface> The available plugins
+     */
     public function getAllPlugins()
     {
         return $this->plugins;

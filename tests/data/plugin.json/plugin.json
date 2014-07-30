@@ -1,0 +1,9 @@
+{
+    "id": "plugin.json",
+    "name": "Plugin with plugin.json manifest",
+    "class": "Plugin\\PluginJson\\PluginJson",
+    "ns": "Plugin\\PluginJson",
+    "author": "noccylabs",
+    "version": "1.0",
+    "extra_user_data": "foo"
+}

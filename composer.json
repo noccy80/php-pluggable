@@ -11,11 +11,12 @@
     "require": {
         "symfony/event-dispatcher": "~2.4",
         "symfony/yaml": "~2.4",
-        "symfony/finder": "~2.4",
-        "symfony/dependency-injection": "~2.4"
+        "symfony/finder": "~2.4"
     },
     "require-dev": {
-        "noccylabs/virtfs": "0.1.*"
+        "noccylabs/virtfs": "0.1.*",
+        "symfony/dependency-injection": "~2.4",
+        "psr/log": "~1"
     },
     "suggest": {
         "noccylabs/virtfs": "to load plugins from zip files and more"
