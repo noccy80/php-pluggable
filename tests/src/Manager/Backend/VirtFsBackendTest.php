@@ -32,6 +32,7 @@ class VirtFsBackendTest extends \PhpUnit_Framework_Testcase
         $backend = new VirtFsBackend($vfs);
         $plugins = $backend->getPlugins($this->manager->getDefaultMetaReaders());
         $this->assertNotNull($plugins);
+        $this->assertNotEquals(0, count($plugins));
     }
     
     

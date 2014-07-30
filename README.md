@@ -61,7 +61,9 @@ load directly from source, and not via phar, zip or any other archive.
 ### VirtFsBackend
 
 VirtFsBackend loads plugins from a VirtFs filesystem consisting of mapped
-directories as well as zip-files.
+directories as well as zip-files. For the VirtFs backend to work, a protocol
+must be assigned to the VirtFs object (default name "plugins"), to allow the
+plugins to be accessed via the virtfs wrapper.
 
         new VirtFsBackend($vfs, "/");
 
@@ -125,6 +127,7 @@ additional libraries be installed for the parsing to work.
     |===========|==========================|=============================|
     | Json      | `plugin.json`            | php5-json                   |
     | Yaml      | `plugin.yml`             | php5-yaml or symfony/yaml   |
+    | Ini       | `plugin.ini`             |                             |
 
 
 The file should define the following values:
@@ -154,5 +157,11 @@ Or use it to set containers etc:
             $plugin->setContainer($container);
         });
 
+### Generic loaders
 
+Generic loaders are available as well:
+
+        $plug->addLoader(function ($plugin) {
+            // ...
+        });
 
