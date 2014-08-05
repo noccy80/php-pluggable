@@ -70,7 +70,10 @@ class DirectoryBackend implements BackendInterface
                         $plugin->setPluginId($id);
                         $plugin->setRoot($plugin_src);
                         $found[$id] = $plugin;
-                    } 
+                    }  else {
+                        $msg = sprintf("The plugin in %s could not be loaded", $plugin_src);
+                        trigger_error($msg);
+                    }
                 }
             }
         }
@@ -114,10 +117,12 @@ class DirectoryBackend implements BackendInterface
         \spl_autoload_register( function($class) use ($plugin_meta, $plugin_root) {
             $ns = $plugin_meta['ns'];
             if (strncmp($class, $ns, strlen($ns)) === 0) {
-                $plugin_file = $plugin_root.strtr(str_replace($ns, "", $class),"\\","/").".php";
+                $plugin_file = $plugin_root.strtr(str_replace(rtrim($ns,"\\"), "", $class),"\\","/").".php";
                 if (file_exists($plugin_file)) {
                     require_once $plugin_file;
                     return true;
+                } else {
+                    trigger_error("Warning: Plugin class file {$plugin_file} not found");
                 }
             }
         });

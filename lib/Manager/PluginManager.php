@@ -165,7 +165,6 @@ class PluginManager
                 $found_plugins[$id] = $plugin;
             }
         }
-        
         $this->plugins = $found_plugins;
         
         // Go over the final list of plugins, and prepare them for operation.
