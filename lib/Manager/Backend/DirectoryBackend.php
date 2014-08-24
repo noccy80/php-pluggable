@@ -29,6 +29,8 @@ class DirectoryBackend implements BackendInterface
 {
     protected $paths = array();
 
+    protected $errors = array();
+
     public function __construct($path=null)
     {
         if ($path) {
@@ -72,7 +74,7 @@ class DirectoryBackend implements BackendInterface
                         $found[$id] = $plugin;
                     }  else {
                         $msg = sprintf("The plugin in %s could not be loaded", $plugin_src);
-                        trigger_error($msg);
+                        $this->logError($msg);
                     }
                 }
             }
@@ -122,7 +124,7 @@ class DirectoryBackend implements BackendInterface
                     require_once $plugin_file;
                     return true;
                 } else {
-                    trigger_error("Warning: Plugin class file {$plugin_file} not found");
+                    $this->logError("Warning: Plugin class file {$plugin_file} not found");
                 }
             }
         });
@@ -137,6 +139,16 @@ class DirectoryBackend implements BackendInterface
         $plugin = new $plugin_class();
         // Return the plugin
         return $plugin;
+    }
+    
+    protected function logError($message)
+    {
+        $this->errors[] = $message;
+    }
+    
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
 }

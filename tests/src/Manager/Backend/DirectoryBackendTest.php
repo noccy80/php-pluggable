@@ -36,5 +36,14 @@ class DirectoryBackendTest extends \PhpUnit_Framework_Testcase
         
     }
     
+    public function testThatErrorMessagesAreLogged()
+    {
+        $backend = new DirectoryBackend( __DIR__."/../../../data");
+        $this->manager->addBackend($backend);
+        
+        $this->manager->findPlugins(true);
+        $this->assertEquals(4, count((array)$backend->getErrors()));
+    }
+    
 }
 
